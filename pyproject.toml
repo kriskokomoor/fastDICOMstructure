@@ -10,6 +10,12 @@ readme = "README.md"
 requires-python = ">=3.9"
 license = { file = "LICENSE" }
 authors = [{ name = "Kris Kokomoor" }]
+# Interim GitHub-release dependency, not PyPI: fastDICOMattrs is not yet
+# published to PyPI, so this pins the immutable v0.2.0 tag directly. Once
+# attrs is on PyPI this becomes an ordinary "fastdicomattrs>=0.2.0".
+dependencies = [
+    "fastdicomattrs @ git+https://github.com/kriskokomoor/fastDICOMattrs.git@v0.2.0",
+]
 
 [tool.setuptools]
 package-dir = { "" = "python" }
