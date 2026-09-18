@@ -1,0 +1,28 @@
+Creating a lossless in-memory representation of DICOM structure independent
+of file I/O.
+- producing a canonical DICOM structure
+- everything else operates on that structure
+- no information is discarded. That means the structure should preserve
+	- VR
+	- VL
+	- endian
+	- explicit/implicit syntax
+	- undefined length
+	- sequence nesting
+	- raw value bytes
+	- offsets (optional)
+- support fidelity levels (on input): FAST, STANDARD, LOSSLESS
+- The structure shouldn't contain pixel data.
+	- Instead
+		- PixelData
+		- offset
+		- length
+		- transfer syntax
+		- compression
+	- The actual pixel bytes can stay in the file.
+- written in C++
+- minimal API
+	- get structure call: takes an imagefile as input and returns a structure containing file metadata
+	- others
+- python wrapper
+	- perhaps C ABI interface for the C++ library

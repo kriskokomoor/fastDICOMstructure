@@ -1,0 +1,56 @@
+name: CI
+
+# This repository is a pure-Python policy/orchestration layer as of the A0
+# semantic-engine extraction (see docs/architecture/
+# ADR-001-ATTRS-NAMING-AND-LAYERING.md in fastDICOMattrs) -- it has no C++ of
+# its own to build. It needs fastDICOMattrs' compiled shared library at test
+# time (its Python package loads it via ctypes), checked out as a true
+# sibling directory, matching this project's own local development
+# convention. Only fastDICOMattrs' library is built here, not its own test
+# suite (which needs Catch2 v3 and verifies itself in its own CI) -- mirrors
+# fastDICOMgateway's CI, one level up the same dependency chain.
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout fastDICOMstructure
+        uses: actions/checkout@v5
+        with:
+          path: fastDICOMstructure
+
+      # TODO(release): pin `ref` to the exact fastDICOMattrs release tag once one is published
+      # (see RELEASE_PROVENANCE.md). Left unpinned here rather than referencing an internal,
+      # non-public commit identifier -- see docs/release/PUBLIC_REPOSITORY_HISTORY_AND_PROVENANCE.md.
+      - name: Checkout fastDICOMattrs
+        uses: actions/checkout@v5
+        with:
+          repository: kriskokomoor/fastDICOMattrs
+          path: fastDICOMattrs
+
+      - name: Build fastDICOMattrs (library + ABI only, no tests/bench)
+        working-directory: fastDICOMattrs
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release \
+            -DFDS_BUILD_TESTS=OFF -DFDS_BUILD_BENCH=OFF -DFDS_BUILD_ABI=ON
+          cmake --build build --parallel
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
+      - name: Install test dependencies
+        run: python3 -m pip install pytest
+
+      - name: Test
+        working-directory: fastDICOMstructure
+        env:
+          FASTDICOMATTRS_REPO: ${{ github.workspace }}/fastDICOMattrs
+        run: python3 -m pytest tests/python -v

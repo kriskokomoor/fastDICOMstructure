@@ -1,0 +1,18 @@
+{
+  "schema": "fastdicomstructure-configuration",
+  "schema_version": 1,
+  "policy": {
+    "name": "public-example-minimal-policy",
+    "version": "1.0.0",
+    "acceptance": [
+      {"op": "require", "target": {"tag": "(0010,0020)", "scope": "root"}}
+    ],
+    "mutation": [
+      {"op": "replace_text", "target": {"tag": "(0010,0010)", "scope": "root"}, "value": "ANONYMIZED"},
+      {"op": "remove", "target": {"tag": "(0009,1001)", "scope": "root"}},
+      {"op": "private_tag_policy", "remove": true},
+      {"op": "ensure_text", "target": {"tag": "(0012,0063)", "scope": "root"},
+       "value": "fastDICOMstructure example policy applied", "vr": "LO"}
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+# Not needed in the image (or, for tests/qualification, deliberately kept
+# out of the runtime image -- see the Dockerfile and docs/architecture/
+# S1_7_CONTAINER_PORTABILITY_DESIGN_CHECKPOINT.md, "Runtime image-content
+# boundary"). The Dockerfile COPYs specific paths (pyproject.toml, README.md,
+# LICENSE, python/) rather than `COPY . .`, so most of these only matter if
+# that ever changes -- kept anyway as the documented, enforced boundary.
+.git
+.gitignore
+.dockerignore
+Dockerfile*
+
+.venv
+venv
+__pycache__
+*.pyc
+.pytest_cache
+build
+*.egg-info
+
+tests
+docs
+.github
+.vscode
+.claude
+CONTRIBUTING.md
+SECURITY.md
+initial_requirements.txt
