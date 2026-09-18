@@ -9,6 +9,7 @@ description = "Policy/orchestration layer on top of fastDICOMattrs' DICOM struct
 readme = "README.md"
 requires-python = ">=3.9"
 license = { file = "LICENSE" }
+authors = [{ name = "Kris Kokomoor" }]
 
 [tool.setuptools]
 package-dir = { "" = "python" }
